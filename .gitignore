@@ -2,3 +2,8 @@
 .ey_local_data
 latest.tar.gz
 wordpress/
+puppet/modules/Puppetfile.lock
+puppet/modules/apache/*
+puppet/modules/mysql/*
+puppet/modules/wordpress/*
+puppet/modules/concat/*

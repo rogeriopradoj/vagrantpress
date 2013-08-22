@@ -1,50 +1,41 @@
-class wordpress::install{
-  
-  # Create the Wordpress database
-  exec{"create-database":
-    unless=>"/usr/bin/mysql -u root -pvagrant wordpress",
-    command=>"/usr/bin/mysql -u root -pvagrant --execute=\"create database wordpress\"",
-  }
-  
-  # Create a MySQL user for wordpress.
-  exec{"create-user":
-    unless=>"/usr/bin/mysql -u wordpress -pwordpress",
-    command=>"/usr/bin/mysql -u root -pvagrant --execute=\"GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'localhost' IDENTIFIED BY 'wordpress' \"",
-  }
-  
-  # Get a new copy of the latest wordpress release
+# Class: wordpress
+#
+# This module manages wordpress
+#
+# Parameters: none
+#
+# Actions:
+#
+# Requires: see Modulefile
+#
+# Sample Usage:
+#
+class wordpress {
 
-	# FILE TO DOWNLOAD: http://wordpress.org/latest.tar.gz
+  class {"wordpress::prepare": } ->
+  class {"wordpress::cli": }
+
+  notice("Install Wordpress")
+
+}
 
 
-  
-  exec{"git-wordpress": #tee hee
-    command=>"/usr/bin/wget http://wordpress.org/latest.tar.gz",
-    cwd=>"/vagrant/",
-    creates=>"/vagrant/latest.tar.gz"
-  }
 
-  exec{"untar-wordpress":
-    cwd     => "/vagrant/",
-    command => "/bin/tar xzvf /vagrant/latest.tar.gz",
-    require => Exec["git-wordpress"],
-  }
-  
+class wordpress::prepare{
 
-  # Import a MySQL database for a basic wordpress site.
-  file{
-    "/tmp/wordpress-db.sql":
-    source=>"puppet:///modules/wordpress/wordpress-db.sql"
-  }
-  
-  exec{"load-db":
-    command=>"/usr/bin/mysql -u wordpress -pwordpress wordpress < /tmp/wordpress-db.sql"
-  }
-  
-  # Copy a working wp-config.php file for the vagrant setup.
-  file{
-    "/vagrant/wordpress/wp-config.php":
-    source=>"puppet:///modules/wordpress/wp-config.php"
-  }
-  
+  notice("Preparing System for Wordpress Install")
+
+  package{"curl": ensure => present,}
+  package{"git":  ensure => present,}
+  package{"php5": ensure => present,}
+  file{"/var/log/apache2": ensure => "directory",}
+
+
+  ## Install Apache
+  class{"apache" : mpm_module => 'prefork', default_vhost => false, require => Package["php5"], }
+  class{"apache::mod::php" :}
+  apache::mod { 'rewrite': }
+  ## Install a MySQL client
+  class{'mysql::php': }
+
 }

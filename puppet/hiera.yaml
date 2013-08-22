@@ -1,0 +1,11 @@
+---
+:backends:
+  - yaml
+
+:yaml:
+   :datadir: /vagrant/hieradata
+
+:hierarchy:
+  - '%{::fqdn}'
+
+:logger: console
