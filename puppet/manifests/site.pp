@@ -10,6 +10,11 @@ class update{
 
 node /^vagrantpress/{
   require update
+  include wordpress    # Installs the base wordpress system.
+
+  # Install a database  with wordpress::database
+
+  # Install a wordpress site with wordpress::site
 
 
 
