@@ -1,23 +1,33 @@
+# Define a global first stage to execute an apt-get update
+# if the operating system is a Debian variant.
+{'first':
+  before => Stage['main']
+}
 
-# Perform a few global operations depending on the OS type.
 class update{
   case $::osfamily{
     'Debian': { exec{'apt-get update': path=>'/bin:/usr/bin:/usr/local/bin'} }
   }
 }
 
-
-
 node /^vagrantpress/{
-  require update
-  include wordpress    # Installs the base wordpress system.
+  class{'update': stage => 'first',}
+
+  class{'wordpress': }
 
   # Install a database  with wordpress::database
 
   # Install a wordpress site with wordpress::site
 
+}
 
+# Define classes to handle dependency management of defined types
+# when installing on a standalone virtual machine.
+class install_database{
 
+}
+
+class install_wordpress{
 
 }
 
