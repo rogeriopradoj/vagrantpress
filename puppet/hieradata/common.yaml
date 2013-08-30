@@ -4,4 +4,19 @@ wordpress::database:
   dbname: mytestdb
   host: localhost
   user: vagrantpress
-  host: vagrantpress
+  pass: vagrantpress
+
+wordpress::sites:
+  vagrantpress:
+    domain: vagrantpress
+    name: vagrantpress
+    host: localhost
+    user: vagrantpress
+    pass:  vagrantpress
+    dbprefix: vp_
+    site_title: 'My Test Site'
+    admin_name: admin
+    admin_password: admin
+    admin_email: 'chad@chadthompson.me'
+    theme_name: twentythirteen
+    rewrite_structure: '/%year%/%monthnum%/%postname%'

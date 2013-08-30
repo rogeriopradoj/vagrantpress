@@ -40,6 +40,9 @@ create_resources("wordpress::database", $wp_database)
 
 class install_wordpress{
     notice("Install wordpress")
+    $wp_sites = hiera('wordpress::sites')
+    notice("Site Strings: $wp_sites")
+    create_resources("wordpress::site", $wp_sites)
 }
 
 
