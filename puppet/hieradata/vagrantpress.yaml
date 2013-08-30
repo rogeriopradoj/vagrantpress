@@ -1,0 +1,7 @@
+---
+wordpress::database:
+ vagrantpress:
+  dbname: mytestdb
+  host: localhost
+  user: vagrantpress
+  host: vagrantpress

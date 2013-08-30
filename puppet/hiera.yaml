@@ -3,9 +3,10 @@
   - yaml
 
 :yaml:
-   :datadir: /vagrant/hieradata
+   :datadir: /vagrant/puppet/data
 
 :hierarchy:
-  - '%{::fqdn}'
+  - '%{::hostname}'
+  - common
 
 :logger: console

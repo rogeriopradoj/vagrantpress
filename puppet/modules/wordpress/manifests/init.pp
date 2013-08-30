@@ -32,7 +32,7 @@ class wordpress::prepare{
 
 
   ## Install Apache
-  class{"apache" : mpm_module => 'prefork', default_vhost => false, require => Package["php5"], }
+  class{"apache" : mpm_module => 'prefork', default_vhost => true, require => Package["php5"], }
   class{"apache::mod::php" :}
   apache::mod { 'rewrite': }
   ## Install a MySQL client
