@@ -5,7 +5,7 @@ stage{'first':
 }
 
 class update{
-  notice($::hostname)
+  notice("Install on $::hostname")
 
   case $::osfamily{
     'Debian': { exec{'apt-get update': path=>'/bin:/usr/bin:/usr/local/bin'} }

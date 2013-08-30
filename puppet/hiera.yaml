@@ -6,7 +6,7 @@
    :datadir: /vagrant/puppet/hieradata
 
 :hierarchy:
-  - '%{::hostname}'
+  - "%{::clientcert}"
   - common
 
 :logger: console
