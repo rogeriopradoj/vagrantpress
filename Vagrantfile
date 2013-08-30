@@ -10,17 +10,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # The default OS for VagrantPress (at the moment) is Ubuntu,
   # though the operation of VagrantPress should be OS agnostic
   # to the degree possible.
-  config.vm.box = "precise64"
-  config.vm.hostname = "vagrantpress"
+  config.vm.define :vmware do |vmware|
+    vmware.vm.box = "precise64"
+    vmware.vm.hostname = "vagrantpress"
+    vmware.vm.network :forwarded_port, guest: 80, host: 8080
+    vmware.vm.provision :puppet do |puppet|
+      puppet.puppet_node = "vagrantpress"
+      puppet.manifests_path = "puppet/manifests"
+      puppet.module_path = "puppet/modules"
+      puppet.manifest_file  = "site.pp"
+      puppet.options = "--verbose --hiera_config=/vagrant/puppet/hiera.yaml"
+    end
 
-  # The url from where the 'config.vm.box' box will be fetched if it
-  # doesn't already exist on the user's system.
-  # config.vm.box_url = "http://domain.com/path/to/above.box"
+  end
 
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network :forwarded_port, guest: 80, host: 8080
+
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.  In VagrantPress terms, you could use this IP
@@ -42,12 +46,33 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
 
-  config.vm.provision :puppet do |puppet|
-    puppet.puppet_node = "vagrantpress"
-    puppet.manifests_path = "puppet/manifests"
-    puppet.module_path = "puppet/modules"
-    puppet.manifest_file  = "site.pp"
-    puppet.options = "--verbose --hiera_config=/vagrant/puppet/hiera.yaml"
+
+
+
+  config.vm.define :amazon do |amazon|
+
+    amazon.vm.box = "dummy"
+    amazon.vm.hostname = "vagrantpress"
+    amazon.vm.provider :aws do |aws, override|
+      aws.access_key_id = "AKIAIE3AFHNSMG5F2XEQ"
+      aws.secret_access_key = "U3Lr+DRxhWtGaLqRlEscEfwHV03bwYQPkKmg6crs"
+
+      aws.keypair_name="chadtkey"
+      aws.ami="ami-7747d01e"
+      override.ssh.username = "ubuntu"
+      override.ssh.private_key_path = "/Users/chad.thompson/.ssh/chadtkey.pem"
+
+      aws.vm.provision :puppet do |puppet|
+        puppet.puppet_node = "vagrantpress"
+        puppet.manifests_path = "puppet/manifests"
+        puppet.module_path = "puppet/modules"
+        puppet.manifest_file  = "site.pp"
+        puppet.options = "--verbose --hiera_config=/vagrant/puppet/hiera.yaml"
+      end
+
+    end
+
+
   end
 
 
