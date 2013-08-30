@@ -3,7 +3,7 @@
   - yaml
 
 :yaml:
-   :datadir: /vagrant/puppet/data
+   :datadir: /vagrant/puppet/hieradata
 
 :hierarchy:
   - '%{::hostname}'
