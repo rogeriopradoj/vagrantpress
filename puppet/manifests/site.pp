@@ -18,8 +18,8 @@ node /^vagrantpress/{
   class{'mysql::server': config_hash=>{'root_password'=>'root'}}
 
   class{'wordpress': } ->
-  class{'install_database': require=>Class['mysql::server'], } ->
-  class{'install_wordpress': }
+ class{'install_database': require=>Class['mysql::server'], } ->
+ class{'install_wordpress': }
 
 
   # Install a database  with wordpress::database
